@@ -8,6 +8,7 @@ export const SelectOperation = ({
   setSecondSet,
 }) => {
   const [inputValue, setInputValue] = useState(0);
+  const [changeValue, setChangeValue] = useState(false);
 
   const [solution, setSolution] = useState({});
 
@@ -16,6 +17,12 @@ export const SelectOperation = ({
   };
 
   const handleSubmit = () => {
+    if (changeValue) {
+      () => {
+        setFirstSet([]);
+        setSecondSet([]);
+      };
+    }
     const data = {
       firstSet: firstSet,
       secondSet: secondSet,
@@ -50,10 +57,6 @@ export const SelectOperation = ({
       () => send_data(),
       () => send_data(),
       () => send_data(),
-      () => {
-        setFirstSet([]);
-        setSecondSet([]);
-      },
     ];
 
     try {
@@ -63,7 +66,7 @@ export const SelectOperation = ({
       eval(equation, { __builtins__: null }, safeDict);
       setError("");
     } catch (error) {
-      setError(error.message);
+      setError(`${error.message}. Please write a valid equation`);
     }
 
     const selectedOption = options[inputValue - 1];
@@ -122,8 +125,16 @@ export const SelectOperation = ({
   return (
     <>
       <h4>Select an option</h4>
-      <p>A = {writeNumbers(firstSet)}</p>
-      <p>B = {writeNumbers(secondSet)}</p>
+      <p>
+        A = {"{"}
+        {writeNumbers(firstSet)}
+        {"}"}
+      </p>
+      <p>
+        B = {"{"}
+        {writeNumbers(secondSet)}
+        {"}"}
+      </p>
       <div className="option">
         <input
           id="AxB"
@@ -132,6 +143,7 @@ export const SelectOperation = ({
           value={1}
           onChange={(e) => {
             setInputValue(e.target.value);
+            setChangeValue(false);
           }}
         ></input>
         <label htmlFor="AxB">AxB</label>
@@ -142,7 +154,10 @@ export const SelectOperation = ({
           type="radio"
           name="operation"
           value={2}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => {
+            setInputValue(e.target.value);
+            setChangeValue(false);
+          }}
         ></input>
         <label htmlFor="BxA">BxA</label>
       </div>
@@ -152,7 +167,10 @@ export const SelectOperation = ({
           type="radio"
           name="operation"
           value={3}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => {
+            setInputValue(e.target.value);
+            setChangeValue(false);
+          }}
         ></input>
         <label htmlFor="AxA">AxA</label>
       </div>
@@ -162,7 +180,10 @@ export const SelectOperation = ({
           type="radio"
           name="operation"
           value={4}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => {
+            setInputValue(e.target.value);
+            setChangeValue(false);
+          }}
         ></input>
         <label htmlFor="BxB">BxB</label>
       </div>
@@ -171,8 +192,8 @@ export const SelectOperation = ({
           id="back"
           type="radio"
           name="operation"
-          value={5}
-          onChange={(e) => setInputValue(e.target.value)}
+          value={!changeValue}
+          onChange={(e) => setChangeValue(e.target.value)}
         ></input>
         <label htmlFor="back">Change Values</label>
       </div>
@@ -184,9 +205,12 @@ export const SelectOperation = ({
           onChange={(e) => setEquation(e.target.value)}
         />
 
-        {error && <p>{error}</p>}
+        {error && <p className="error">{error}</p>}
       </div>
-      <button disabled={inputValue == 0 || !equation} onClick={handleSubmit}>
+      <button
+        disabled={(inputValue === 0 || !equation) && !changeValue}
+        onClick={handleSubmit}
+      >
         Submit
       </button>
       {Object.keys(solution).length !== 0 && writeAnswer()}

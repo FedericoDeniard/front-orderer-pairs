@@ -14,5 +14,6 @@ body {
   opacity: 1;
   background-image: radial-gradient(#ddd 3.1500000000000001px, #AFC9D0 1.1500000000000001px);
   background-size: 23px 23px;
-  border: 2px solid
+  border: 2px solid;
+  font-size: 20px;
 }
