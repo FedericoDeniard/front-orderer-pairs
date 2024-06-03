@@ -1,3 +1,8 @@
 .option input {
     cursor: pointer;
 }
+
+.option textarea {
+    resize: none;
+    padding: 2px;
+}

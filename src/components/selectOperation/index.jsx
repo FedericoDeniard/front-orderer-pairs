@@ -7,26 +7,118 @@ export const SelectOperation = ({
   setFirstSet,
   setSecondSet,
 }) => {
-  const [inputValue, setInputValue] = useState();
+  const [inputValue, setInputValue] = useState(0);
+
+  const [solution, setSolution] = useState({});
 
   const writeNumbers = (array) => {
     return array.map((num) => num.toString()).join(", ");
   };
 
   const handleSubmit = () => {
+    const data = {
+      firstSet: firstSet,
+      secondSet: secondSet,
+      equation: equation,
+      operation: inputValue,
+    };
+    const send_data = () => {
+      fetch("http://localhost:5000/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error fetching data");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Data received:", data);
+          setSolution(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
     const options = [
-      null,
-      null,
-      null,
-      null,
+      () => send_data(),
+      () => send_data(),
+      () => send_data(),
+      () => send_data(),
       () => {
         setFirstSet([]);
         setSecondSet([]);
       },
     ];
+
+    try {
+      const x = 1;
+      const y = 1;
+      const safeDict = { x: x, y: y };
+      eval(equation, { __builtins__: null }, safeDict);
+      setError("");
+    } catch (error) {
+      setError(error.message);
+    }
+
     const selectedOption = options[inputValue - 1];
     selectedOption();
   };
+
+  const [equation, setEquation] = useState("");
+  const [error, setError] = useState("");
+
+  const showMatrix = (matrix) => {
+    let message = "";
+    for (let i = 0; i < matrix.length; i++) {
+      message += "[ ";
+      for (let j = 0; j < matrix[i].length; j++) {
+        message += matrix[i][j];
+        if (j < matrix[i].length - 1) {
+          message += ", ";
+        }
+      }
+      message += " ] ";
+      if (i < matrix.length - 1) {
+        message += "<br />"; // Agregar <br /> solo si no es la última fila
+      }
+    }
+    return message;
+  };
+
+  const handleEquation = () => {};
+
+  const writeAnswer = () => {
+    return (
+      <div>
+        <p>
+          Product: [
+          {solution["product"].map((pair) => `[${pair.join(", ")}]`).join(", ")}
+          ]
+        </p>
+        <p>
+          Relation: [
+          {solution["relation"]
+            .map((pair) => `[${pair.join(", ")}]`)
+            .join(", ")}
+          ]
+        </p>
+        <p>Matrix: </p>
+        <div
+          dangerouslySetInnerHTML={{ __html: showMatrix(solution["matrix"]) }}
+        />
+        <p>Domain: [{solution["domain"].join(", ")}]</p>
+        <p>Range: [{solution["range"].join(", ")}]</p>
+        <p>{solution["property"]}</p>
+      </div>
+    );
+  };
+
   return (
     <>
       <h4>Select an option</h4>
@@ -84,7 +176,18 @@ export const SelectOperation = ({
         ></input>
         <label htmlFor="back">Change Values</label>
       </div>
-      <button onClick={handleSubmit}>Submit</button>
+      <div className="option">
+        <textarea
+          placeholder="Write an equation"
+          value={equation}
+          onChange={(e) => setEquation(e.target.value)}
+        />
+        {error && <p>{error}</p>}
+      </div>
+      <button disabled={inputValue == 0 || !equation} onClick={handleSubmit}>
+        Submit
+      </button>
+      {Object.keys(solution).length !== 0 && writeAnswer()}
     </>
   );
 };
