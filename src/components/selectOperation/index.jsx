@@ -9,6 +9,7 @@ export const SelectOperation = ({
 }) => {
   const [inputValue, setInputValue] = useState(0);
   const [changeValue, setChangeValue] = useState(false);
+  const [fetchingData, setFetchingData] = useState(false);
 
   const [solution, setSolution] = useState({});
 
@@ -30,6 +31,7 @@ export const SelectOperation = ({
       operation: inputValue,
     };
     const send_data = () => {
+      setFetchingData(true);
       fetch("https://back-orderer-pairs.onrender.com", {
         method: "POST",
         headers: {
@@ -44,6 +46,7 @@ export const SelectOperation = ({
           return response.json();
         })
         .then((data) => {
+          setFetchingData(false);
           console.log("Data received:", data);
           setSolution(data);
         })
@@ -87,27 +90,36 @@ export const SelectOperation = ({
   };
 
   const writeAnswer = () => {
+    if (Object.keys(solution).length === 0) {
+      return null;
+    }
     return (
-      <div>
+      <div className="answers">
         <p>
-          Product: [
-          {solution["product"].map((pair) => `[${pair.join(", ")}]`).join(", ")}
-          ]
+          <p>
+            Product: [
+            {solution["product"]
+              .map((pair) => `[${pair.join(", ")}]`)
+              .join(", ")}
+            ]
+          </p>
+          <p>
+            Relation: [
+            {solution["relation"]
+              .map((pair) => `[${pair.join(", ")}]`)
+              .join(", ")}
+            ]
+          </p>
+          <p>Matrix: </p>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: showMatrix(solution["matrix"]),
+            }}
+          />
+          <p>Domain: [{solution["domain"].join(", ")}]</p>
+          <p>Range: [{solution["range"].join(", ")}]</p>
+          <p>{solution["property"]}</p>
         </p>
-        <p>
-          Relation: [
-          {solution["relation"]
-            .map((pair) => `[${pair.join(", ")}]`)
-            .join(", ")}
-          ]
-        </p>
-        <p>Matrix: </p>
-        <div
-          dangerouslySetInnerHTML={{ __html: showMatrix(solution["matrix"]) }}
-        />
-        <p>Domain: [{solution["domain"].join(", ")}]</p>
-        <p>Range: [{solution["range"].join(", ")}]</p>
-        <p>{solution["property"]}</p>
       </div>
     );
   };
@@ -203,7 +215,11 @@ export const SelectOperation = ({
       >
         Submit
       </button>
-      {Object.keys(solution).length !== 0 && writeAnswer()}
+      {fetchingData ? (
+        <p>Fetching data... Please wait for the server response</p>
+      ) : (
+        writeAnswer()
+      )}
     </>
   );
 };
