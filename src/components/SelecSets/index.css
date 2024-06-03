@@ -1,0 +1,27 @@
+.MainMenu-Title {
+    word-wrap: normal;
+    max-width: 200px;
+
+}
+
+.setNumbers {
+    display: flex;
+    flex-direction: column;
+    max-width: 200px;
+    margin: 10px 0;
+    gap: 5px;
+}
+
+.setNumbers textarea {
+    resize: none;
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 2px;
+}
+
+button {
+    border-radius: 5px;
+    border: 1px solid;
+    padding: 2px;
+    cursor: pointer;
+}
