@@ -19,53 +19,52 @@ export const SelectOperation = ({
 
   const handleSubmit = () => {
     if (changeValue) {
-      () => {
-        setFirstSet([]);
-        setSecondSet([]);
+      setFirstSet([]);
+      setSecondSet([]);
+    } else {
+      const data = {
+        firstSet: firstSet,
+        secondSet: secondSet,
+        equation: equation,
+        operation: inputValue,
       };
-    }
-    const data = {
-      firstSet: firstSet,
-      secondSet: secondSet,
-      equation: equation,
-      operation: inputValue,
-    };
-    const send_data = () => {
-      setFetchingData(true);
-      fetch("https://back-orderer-pairs.onrender.com", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error fetching data");
-          }
-          return response.json();
+      const send_data = () => {
+        setFetchingData(true);
+        fetch("https://back-orderer-pairs.onrender.com", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
         })
-        .then((data) => {
-          setFetchingData(false);
-          console.log("Data received:", data);
-          setSolution(data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Error fetching data");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            setFetchingData(false);
+            console.log("Data received:", data);
+            setSolution(data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      };
 
-    try {
-      const x = 1;
-      const y = 1;
-      const safeDict = { x: x, y: y };
-      eval(equation, { __builtins__: null }, safeDict);
-      setError("");
-    } catch (error) {
-      setError(`${error.message}. Please write a valid equation`);
+      try {
+        const x = 1;
+        const y = 1;
+        const safeDict = { x: x, y: y };
+        eval(equation, { __builtins__: null }, safeDict);
+        setError("");
+      } catch (error) {
+        setError(`${error.message}. Please write a valid equation`);
+      }
+
+      send_data();
     }
-
-    send_data();
   };
 
   const [equation, setEquation] = useState("");
@@ -216,7 +215,10 @@ export const SelectOperation = ({
         Submit
       </button>
       {fetchingData ? (
-        <p>Fetching data... Please wait for the server response</p>
+        <div className="loading">
+          <p>Fetching data... Please wait for the server response</p>
+          <span class="loader"></span>
+        </div>
       ) : (
         writeAnswer()
       )}
