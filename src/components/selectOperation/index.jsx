@@ -52,13 +52,6 @@ export const SelectOperation = ({
         });
     };
 
-    const options = [
-      () => send_data(),
-      () => send_data(),
-      () => send_data(),
-      () => send_data(),
-    ];
-
     try {
       const x = 1;
       const y = 1;
@@ -69,8 +62,7 @@ export const SelectOperation = ({
       setError(`${error.message}. Please write a valid equation`);
     }
 
-    const selectedOption = options[inputValue - 1];
-    selectedOption();
+    send_data();
   };
 
   const [equation, setEquation] = useState("");
@@ -88,13 +80,11 @@ export const SelectOperation = ({
       }
       message += " ] ";
       if (i < matrix.length - 1) {
-        message += "<br />"; // Agregar <br /> solo si no es la última fila
+        message += "<br />";
       }
     }
     return message;
   };
-
-  const handleEquation = () => {};
 
   const writeAnswer = () => {
     return (
