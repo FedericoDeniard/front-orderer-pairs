@@ -203,7 +203,7 @@ export const SelectOperation = ({
         <textarea
           placeholder="Write an equation"
           value={equation}
-          onChange={(e) => setEquation(e.target.value)}
+          onChange={(e) => setEquation(e.target.value.toLocaleLowerCase())}
         />
 
         {error && <p className="error">{error}</p>}
