@@ -23,7 +23,7 @@ export const SelectOperation = ({
       operation: inputValue,
     };
     const send_data = () => {
-      fetch("http://localhost:5000/", {
+      fetch("https://back-orderer-pairs.onrender.com", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -177,11 +177,13 @@ export const SelectOperation = ({
         <label htmlFor="back">Change Values</label>
       </div>
       <div className="option">
+        <p className="example">Example: x &gt; y*2</p>
         <textarea
           placeholder="Write an equation"
           value={equation}
           onChange={(e) => setEquation(e.target.value)}
         />
+
         {error && <p>{error}</p>}
       </div>
       <button disabled={inputValue == 0 || !equation} onClick={handleSubmit}>
