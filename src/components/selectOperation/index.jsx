@@ -118,6 +118,7 @@ export const SelectOperation = ({
           <p>Domain: [{solution["domain"].join(", ")}]</p>
           <p>Range: [{solution["range"].join(", ")}]</p>
           <p>{solution["property"]}</p>
+          <p>{solution["clasify"]}</p>
         </p>
       </div>
     );
