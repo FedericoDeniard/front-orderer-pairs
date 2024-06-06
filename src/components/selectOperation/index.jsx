@@ -1,5 +1,7 @@
 import { useState } from "react";
 import "./index.css";
+import { FormControlLabel, Radio, Button, TextField, Box } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 
 export const SelectOperation = ({
   firstSet,
@@ -125,7 +127,7 @@ export const SelectOperation = ({
   };
 
   return (
-    <>
+    <Box className="container">
       <h4>Select an option</h4>
       <p>
         A = {"{"}
@@ -137,84 +139,66 @@ export const SelectOperation = ({
         {writeNumbers(secondSet)}
         {"}"}
       </p>
-      <div className="option">
-        <input
-          id="AxB"
-          type="radio"
-          name="operation"
-          value={1}
-          onChange={(e) => {
-            setInputValue(e.target.value);
-            setChangeValue(false);
-          }}
-        ></input>
-        <label htmlFor="AxB">AxB</label>
-      </div>
-      <div className="option">
-        <input
-          id="BxA"
-          type="radio"
-          name="operation"
-          value={2}
-          onChange={(e) => {
-            setInputValue(e.target.value);
-            setChangeValue(false);
-          }}
-        ></input>
-        <label htmlFor="BxA">BxA</label>
-      </div>
-      <div className="option">
-        <input
-          id="AxA"
-          type="radio"
-          name="operation"
-          value={3}
-          onChange={(e) => {
-            setInputValue(e.target.value);
-            setChangeValue(false);
-          }}
-        ></input>
-        <label htmlFor="AxA">AxA</label>
-      </div>
-      <div className="option">
-        <input
-          id="BxB"
-          type="radio"
-          name="operation"
-          value={4}
-          onChange={(e) => {
-            setInputValue(e.target.value);
-            setChangeValue(false);
-          }}
-        ></input>
-        <label htmlFor="BxB">BxB</label>
-      </div>
-      <div className="option">
-        <input
-          id="back"
-          type="radio"
-          name="operation"
-          value={!changeValue}
-          onChange={(e) => setChangeValue(e.target.value)}
-        ></input>
-        <label htmlFor="back">Change Values</label>
-      </div>
+      <FormControlLabel
+        control={
+          <Radio
+            value={1}
+            checked={inputValue === "1"}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+        }
+        label="AxB"
+      />
+      <FormControlLabel
+        control={
+          <Radio
+            value={2}
+            checked={inputValue === "2"}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+        }
+        label="BxA"
+      />
+      <FormControlLabel
+        control={
+          <Radio
+            value={3}
+            checked={inputValue === "3"}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+        }
+        label="AxA"
+      />
+      <FormControlLabel
+        control={
+          <Radio
+            value={4}
+            checked={inputValue === "4"}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+        }
+        label="BxB"
+      />
       <div className="option">
         <p className="example">Example: x &gt; y*2</p>
-        <textarea
-          placeholder="Write an equation"
+        <TextField
+          variant="filled"
           value={equation}
+          placeholder="Write an equation"
           onChange={(e) => setEquation(e.target.value.toLocaleLowerCase())}
         />
 
         {error && <p className="error">{error}</p>}
       </div>
-      <button
+      <Button
+        className="eq-submit"
+        variant="contained"
         disabled={(inputValue === 0 || !equation) && !changeValue}
         onClick={handleSubmit}
+        endIcon={<SendIcon />}
       >
         Submit
-      </button>
+      </Button>
       {fetchingData ? (
         <div className="loading">
           <p>Fetching data... Please wait for the server response</p>
@@ -223,6 +207,6 @@ export const SelectOperation = ({
       ) : (
         writeAnswer()
       )}
-    </>
+    </Box>
   );
 };
