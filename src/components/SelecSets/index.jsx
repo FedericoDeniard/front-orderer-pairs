@@ -1,6 +1,9 @@
 import { useState } from "react";
 import "./index.css";
 
+import { TextField, Button, Box } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+
 export const SelectSets = ({ setFirstSet, setSecondSet }) => {
   const [firstValue, setFirstValue] = useState("");
   const [secondValue, setSecondValue] = useState("");
@@ -29,7 +32,6 @@ export const SelectSets = ({ setFirstSet, setSecondSet }) => {
         secondArray[index] = parsedNumber;
       });
 
-      // Si no hay errores, actualiza los estados
       setFirstSet(firstArray);
       setSecondSet(secondArray);
     } catch (error) {
@@ -39,32 +41,41 @@ export const SelectSets = ({ setFirstSet, setSecondSet }) => {
 
   return (
     <>
-      <div className="MainMenu-Title">
+      <Box className="MainMenu-Title">
         <h4>Add the 2 sets of numbers</h4>
         <p>Enter a comma-separated list of numbers in each field below.</p>
-      </div>
+      </Box>
 
-      <div className="setNumbers">
-        <label htmlFor="firstSet">First set of numbers</label>
-        <textarea
+      <Box className="setNumbers">
+        <label id="firstSet">First set of numbers</label>
+        <TextField
+          variant="filled"
           value={firstValue}
           onChange={(e) => setFirstValue(e.target.value)}
           id="firstSet"
           type="text"
           placeholder="Enter numbers, separated by commas."
-        ></textarea>
-      </div>
-      <div className="setNumbers">
-        <label htmlFor="secondSet">Second set of numbers</label>
-        <textarea
+        ></TextField>
+      </Box>
+      <Box className="setNumbers">
+        <label id="secondSet">Second set of numbers</label>
+        <TextField
+          variant="filled"
           value={secondValue}
           onChange={(e) => setSecondValue(e.target.value)}
           id="secondSet"
           type="text"
           placeholder="Enter numbers, separated by commas."
-        ></textarea>
-        <button onClick={handleSubmit}>Send values</button>
-      </div>
+        ></TextField>
+        <Button
+          variant="contained"
+          disabled={!firstValue || !secondValue}
+          onClick={handleSubmit}
+          endIcon={<SendIcon />}
+        >
+          Send values
+        </Button>
+      </Box>
     </>
   );
 };

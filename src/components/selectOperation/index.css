@@ -42,6 +42,10 @@
     animation: rotation 1s linear infinite;
 }
 
+.eq-submit {
+    margin-top: 5px !important
+}
+
 @keyframes rotation {
     0% {
         transform: rotate(0deg);
